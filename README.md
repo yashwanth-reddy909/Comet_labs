@@ -30,19 +30,19 @@
  - Mentioned in routes/index.js file
  -Method /stargazers GET
  - reponame,username need to send in query parameters required<br>
- - username if mentioned it will according to that user if not it will fetch for default users<br>
+ - username if mentioned it will according to that user if not it will fetch for default user<br>
  - it will tell the stargazers for that repo
  
  -Methos /collaborators GET
  - reponame,username need to send in query parameters required<br>
- - username if mentioned it will according to that user if not it will fetch for default users<br>
+ - username if mentioned it will according to that user if not it will fetch for default user<br>
  - it will tell the collaborators for that repo
 
 # REST API for topics
  - Mentioned in routes/topics.js file
  -Method /topics GET
  - reponame,username need to send in query parameters required<br>
- - username if mentioned it will according to that user if not it will fetch for default users<br>
+ - username if mentioned it will according to that user if not it will fetch for default user<br>
  - it will tell the topics tags that repo has<br>
  
  -Method /topics POST<br>
