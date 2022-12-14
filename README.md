@@ -22,6 +22,34 @@
  
 -Method /repos POST
 - For posting a repo in to github<br>
-- It will post 
+- It requires the reponame need to be mentioned in req body<br>
+- {req.body.reponame, req.body.repodescription, req.body.visibility} need to be send in JSON as request body<br>
+- If visibiltity(boolen) mentioned as true it will set as PUBLIC repo, vice versa<br>
+
+# REST API for stargazers and collaborators
+ - Mentioned in routes/index.js file
+ -Method /stargazers GET
+ - reponame,username need to send in query parameters required<br>
+ - username if mentioned it will according to that user if not it will fetch for default users<br>
+ - it will tell the stargazers for that repo
+ 
+ -Methos /collaborators GET
+ - reponame,username need to send in query parameters required<br>
+ - username if mentioned it will according to that user if not it will fetch for default users<br>
+ - it will tell the collaborators for that repo
+
+# REST API for topics
+ - Mentioned in routes/topics.js file
+ -Method /topics GET
+ - reponame,username need to send in query parameters required<br>
+ - username if mentioned it will according to that user if not it will fetch for default users<br>
+ - it will tell the topics tags that repo has<br>
+ 
+ -Method /topics POST<br>
+ - reponame need to be mentioned in request body as JSON<br>
+ - topics need to mentioned as well in that request body<br>
+ - it will post the topic tag in to default user repo topics <br>
+
+
 
 
