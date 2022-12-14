@@ -6,16 +6,9 @@ const axios = require('axios');
 var instance = require("../axios")
 require('dotenv').config({path: __dirname + '../.env'})
 
-const getGithubUsername = (token,callback) => {
-  axios
-    .get("https://api.github.com/user",{
-      headers: {
-        Authorization: 'Bearer ' + token //the token is a variable which holds the token
-      }})
-    .then((response) => {
-        callback(response.data.login);
-    })
-    .catch((error) => console.log(error));
+const getGithubUsername = async () => {
+  response = await instance.get("https://api.github.com/user")
+  return response.data.login
 }
 
 function withoutProperty(obj, property) {  
@@ -77,6 +70,7 @@ var getReposwith_5stars_5forks = (respData) => {
 
 router.get('/repos', function (req, res, next) {
   var username = req.query.username;
+  console.log(username);
   if (username == null) {
     // get the repos of the logged in user
     instance.get('/user/repos').then(function (response) {
@@ -87,9 +81,11 @@ router.get('/repos', function (req, res, next) {
   } else {
     instance.get('/users/' + req.query.username + '/repos')
       .then(function (response) {
+        console.log(response);
         res.send(Altervalues(response.data));
       })
       .catch(function (error) {
+        console.error(error);
         res.send(error.message)
       });
   }
@@ -122,18 +118,22 @@ router
   var repoName = req.query.reponame;
   if (username == null) {
     // get the topics of the authenticated user
-    getGithubUsername(process.env.AUTH_TOKEN,function(result){
-      console.log(result);
-      username  = result
-    });
-    console.log(username);
+    getGithubUsername().then(resp => {
+      instance.get('/repos/' + resp + '/' + repoName + '/topics')
+      .then(function (response) {
+        res.send(response.data);
+      })
+      .catch(function (error) {
+        res.send(error.message)
+      });
+    })
     // instance.get('/user/repos').then(function (response) {
     //   res.send(response.data);
     // }).catch(function (error) {
     //   console.log(error);
     // });
   } 
-  // else {
+  else {
     instance.get('/repos/' + username + '/' + repoName + '/topics')
       .then(function (response) {
         res.send(response.data);
@@ -141,7 +141,7 @@ router
       .catch(function (error) {
         res.send(error.message)
       });
-  // }
+  }
 })
 
 .post('/topics', function (req, res, next) {
@@ -167,17 +167,24 @@ router.get('/stargazers', function (req, res, next) {
   var reponame = req.query.reponame;
   if (username == null) {
     // get the repos of the logged in user
-    getGithubUsername(username,function(result){
-      username = result;
-    });
-  }
-    instance.get('/repos/' + username + '/' + reponame + '/stargazers')
+    getGithubUsername().then(resp => {
+      instance.get('/repos/' + resp + '/' + reponame + '/stargazers')
       .then(function (response) {
         res.send(response.data);
       })
       .catch(function (error) {
         res.send(error.message)
       });
+    })
+  }else{
+    instance.get('/repos/' + username + '/' + reponame + '/stargazers')
+    .then(function (response) {
+      res.send(response.data);
+    })
+    .catch(function (error) {
+      res.send(error.message)
+    });
+  }
   
 });
 
@@ -186,10 +193,16 @@ router.get('/collaborators', function (req, res, next) {
   var reponame = req.query.reponame;
   if (username == null) {
     // get the repos of the logged in user
-    getGithubUsername(username,function(result){
-      username = result;
-    });
-  }
+    getGithubUsername().then(resp => {
+      instance.get('/repos/' + resp + '/' + reponame + '/collaborators')
+      .then(function (response) {
+        res.send(response.data);
+      })
+      .catch(function (error) {
+        res.send(error.message);
+      });
+    })
+  }else{
     instance.get('/repos/' + username + '/' + reponame + '/collaborators')
       .then(function (response) {
         res.send(response.data);
@@ -197,6 +210,8 @@ router.get('/collaborators', function (req, res, next) {
       .catch(function (error) {
         res.send(error.message);
       });
+  }
+    
   
 });
 
