@@ -5,7 +5,8 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+var topicRouter = require('./routes/topic');
+var repoRouter = require('./routes/repos');
 
 var app = express();
 
@@ -18,6 +19,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+
+app.use('/repos',repoRouter);
+app.use('/topics',topicRouter);
 
 app.use('/', indexRouter);
 // all the routes related to the assignment in the ./roues/index.js file
